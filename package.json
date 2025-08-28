@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev" : "nodemon src/app.js"
+    "dev": "nodemon src/app.js"
   },
   "author": "Shiva Kumar",
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }

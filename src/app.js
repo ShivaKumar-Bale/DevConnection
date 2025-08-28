@@ -1,22 +1,16 @@
-const express = require('express');
-const app = express();         
+const express = require("express");
+const app = express();
+const { authAdmin } = require("./middlewares/auth");
 
-app.get("/user", (req,res) => {
-  res.send({"firstName": "Shiva Kumar", "lastName": "Bale"})
-})
+app.use("/admin", authAdmin);
 
-app.post("/user", (req,res) => {
-  res.send("Data sucessfully saved to database")
-})
+app.get("/admin/getAllData", (req, res, next) => {
+  res.send("All Data Sent");
+});
+app.get("/admin/deleteAllData", (req, res, next) => {
+  res.send("All Data Deleted");
+});
 
-app.delete("/user" , (req,res) => {
-  res.send("Data Deleted successfully")
-})
-
-app.use('/test', (req, res) => {           //Request handler
-  res.send('Testingggg!')
-})
-
-app.listen(3000, ()=> {
-    console.log("Sever is sucessfully listening in port:3000");
-})
+app.listen(3000, () => {
+  console.log("Sever is sucessfully listening in port:3000");
+});
