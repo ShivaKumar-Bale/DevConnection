@@ -1,16 +1,14 @@
 const express = require("express");
 const app = express();
-const { authAdmin } = require("./middlewares/auth");
+const connectDB = require("./config/database");
 
-app.use("/admin", authAdmin);
-
-app.get("/admin/getAllData", (req, res, next) => {
-  res.send("All Data Sent");
-});
-app.get("/admin/deleteAllData", (req, res, next) => {
-  res.send("All Data Deleted");
-});
-
-app.listen(3000, () => {
-  console.log("Sever is sucessfully listening in port:3000");
-});
+connectDB()
+  .then(() => {
+    console.log("Database Connected Successfully");
+    app.listen(3000, () => {
+      console.log("Sever is sucessfully listening in port:3000");
+    });
+  })
+  .catch((err) => {
+    console.log("Database not connected");
+  });
