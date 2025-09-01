@@ -30,6 +30,21 @@ app.get("/oneUser", async (req, res) => {
   }
 });
 
+//Get User by id
+app.get("/userByID", async (req, res) => {
+  const userID = req.body._id;
+  try {
+    const userByID = await User.findById({ _id: userID });
+    if (userByID.length === 0) {
+      res.status(400).send("User Not Found");
+    } else {
+      res.send(userByID);
+    }
+  } catch (error) {
+    res.status(400).send("Something went Wrong" + err.message);
+  }
+});
+
 //Get all users
 app.get("/allUsers", async (req, res) => {
   try {
