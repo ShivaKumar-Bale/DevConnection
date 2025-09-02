@@ -45,6 +45,32 @@ app.get("/userByID", async (req, res) => {
   }
 });
 
+// find user by id and delete
+app.delete("/userByIDandDelete", async (req, res) => {
+  const userID = req.body._id;
+  try {
+    const userByID = await User.findByIdAndDelete({ _id: userID });
+    if (userByID.length === 0) {
+      res.status(400).send("User Not Found");
+    } else {
+      res.send(userByID);
+    }
+  } catch (error) {
+    res.status(400).send("Something went Wrong" + err.message);
+  }
+});
+
+//Update data of the user using patch handler
+app.patch("/patchUser", async (req, res) => {
+  try {
+    const userID = req.body._id;
+    const updateUser = await User.findByIdAndUpdate({ _id: userID }, req.body);
+    res.send("User Updated Succesfullyy");
+  } catch (error) {
+    res.status(400).status("Something went wrong" + err.message);
+  }
+});
+
 //Get all users
 app.get("/allUsers", async (req, res) => {
   try {
