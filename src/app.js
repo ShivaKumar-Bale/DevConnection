@@ -64,10 +64,12 @@ app.delete("/userByIDandDelete", async (req, res) => {
 app.patch("/patchUser", async (req, res) => {
   try {
     const userID = req.body._id;
-    const updateUser = await User.findByIdAndUpdate({ _id: userID }, req.body);
+    const updateUser = await User.findByIdAndUpdate({ _id: userID }, req.body, {
+      runValidators: true,
+    });
     res.send("User Updated Succesfullyy");
   } catch (error) {
-    res.status(400).status("Something went wrong" + err.message);
+    res.status(400).status("Something went wrong");
   }
 });
 
