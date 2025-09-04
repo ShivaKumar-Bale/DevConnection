@@ -61,15 +61,24 @@ app.delete("/userByIDandDelete", async (req, res) => {
 });
 
 //Update data of the user using patch handler
-app.patch("/patchUser", async (req, res) => {
+app.patch("/patchUser/:userID", async (req, res) => {
+  const userID = req.params?.userID;
+
   try {
-    const userID = req.body._id;
-    const updateUser = await User.findByIdAndUpdate({ _id: userID }, req.body, {
+    const ALLOWED_UPDATES = ["age", "gender", "skills", "about", "photoURL"];
+    const ISUPDTEALLOWED = Object.keys(req.body).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+    if (!ISUPDTEALLOWED) {
+      throw new Error("Not updated");
+    }
+    const userByID = await User.findByIdAndUpdate({ _id: userID }, req.body, {
       runValidators: true,
     });
-    res.send("User Updated Succesfullyy");
-  } catch (error) {
-    res.status(400).status("Something went wrong");
+    console.log(userByID);
+    res.send("User updated successfully");
+  } catch (err) {
+    res.status(400).send("Something went Wrong: " + err.message);
   }
 });
 
