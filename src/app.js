@@ -2,16 +2,32 @@ const express = require("express");
 const app = express();
 const connectDB = require("./config/database");
 const User = require("./models/user");
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  const user = new User(req.body);
   try {
+    //validation of data
+    validateSignUpData(req);
+
+    //Encrypting the password
+    const { firstName, lastName, emailId, password } = req.body;
+    const PasswordHash = await bcrypt.hash(password, 10);
+    console.log(PasswordHash);
+
+    // Creating the new instance of a user
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: PasswordHash,
+    });
     await user.save();
     res.send("User added successfully");
   } catch (error) {
-    res.status(400).send("Can't add User" + err.message);
+    res.status(400).send("ERROR: " + error.message);
   }
 });
 
@@ -26,7 +42,7 @@ app.get("/oneUser", async (req, res) => {
       res.send(user);
     }
   } catch (error) {
-    res.status(400).send("Something went wrong" + err.message);
+    res.status(400).send("Something went wrong" + error.message);
   }
 });
 
@@ -41,7 +57,7 @@ app.get("/userByID", async (req, res) => {
       res.send(userByID);
     }
   } catch (error) {
-    res.status(400).send("Something went Wrong" + err.message);
+    res.status(400).send("Something went Wrong" + error.message);
   }
 });
 
@@ -90,7 +106,7 @@ app.get("/allUsers", async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .send("Something went wrong with getting all users" + err.message);
+      .send("Something went wrong with getting all users" + error.message);
   }
 });
 
